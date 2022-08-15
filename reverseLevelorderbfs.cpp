@@ -1,5 +1,6 @@
 using namespace std;
 
+#include <deque>
 #include <iostream>
 #include <queue>
 
@@ -15,32 +16,39 @@ class TreeNode {
   }
 };
 
-class LevelOrderTraversal {
+class ReverseLevelOrderTraversal {
  public:
-  static vector<vector<int>> traverse(TreeNode *root) {
-    vector<vector<int>> result;
-    queue<TreeNode*> q;
+  static deque<vector<int>> traverse(TreeNode *root) {
+    deque<vector<int>> result = deque<vector<int>>();
+    if(root == NULL)
+    {
+      return result;
+    }
+    queue<TreeNode*>q;
     q.push(root);
     while(!q.empty())
     {
-      vector<int>level;
-      int levelSize = q.size();
-      for(int i =0;i<levelSize;i++)
+      vector<int> level;
+      int levelSize=q.size();
+      for(int i=0;i<levelSize;i++)
       {
         TreeNode * temp = q.front();
-         q.pop();
+        q.pop();
         level.push_back(temp->val);
         if(temp->left != nullptr)
+        {
           q.push(temp->left);
+        }
         if(temp->right != nullptr)
+        {
           q.push(temp->right);
+        }
       }
-      result.push_back(level);
+      result.push_front(level);
     }
     return result;
   }
 };
-
 int main(int argc, char *argv[]) {
   TreeNode *root = new TreeNode(12);
   root->left = new TreeNode(7);
@@ -48,10 +56,11 @@ int main(int argc, char *argv[]) {
   root->left->left = new TreeNode(9);
   root->right->left = new TreeNode(10);
   root->right->right = new TreeNode(5);
-  vector<vector<int>> result = LevelOrderTraversal::traverse(root);
-  cout << "Level order traversal: ";
-  for (auto vec : result) {
-    for (auto num : vec) {
+  auto result = ReverseLevelOrderTraversal::traverse(root);
+
+  cout << "Reverse level order traversal: ";
+  for (auto que : result) {
+    for (auto num : que) {
       cout << num << " ";
     }
     cout << endl;
